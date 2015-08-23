@@ -1,72 +1,84 @@
-#tests and shit!
+=begin
+get_best_move is huge
+say who won
+offer to play again?
+=end
 
 class Game
   def initialize
     @board = ["0", "1", "2", "3", "4", "5", "6", "7", "8"]
-    @computer = ""
-    @human = ""
+    @computer = get_symbols(@computer, "the computer")
+    @human = get_symbols(@human, "yourself")
+    if @human == @computer
+      puts "You can't do that! Pick a different symbol for yourself."
+      @human = get_symbols(@human, "yourself")
+    end
   end
 
-#move me!
-  def get_symbols(player)
-    puts "What kind of symbol would you like to use for #{player}?"#well this isn't displaying
-    player = gets.chomp
-    puts "'#{player}' you say?"
-    return player
-  end
-
-  def start_game #yeesh this is a lot in one method
-    puts "Welcome to my Tic Tac Toe game"
-    computer = get_symbols(computer)
-    human = get_symbols(human)
-    determine_order
-    
-  end
-
-  def human_first  #well this is not working.
+  def default_board
     puts "|_#{@board[0]}_|_#{@board[1]}_|_#{@board[2]}_|\n|_#{@board[3]}_|_#{@board[4]}_|_#{@board[5]}_|\n|_#{@board[6]}_|_#{@board[7]}_|_#{@board[8]}_|\n"
-    puts "Please select your spot." 
-    play_game
   end
-    
-  def play_game
+
+  def get_symbols(player, title)
+    puts "What kind of symbol would you like to use for #{title}?"
+    player = gets.chomp
+  end
+
+  def start_game
+    puts "Welcome to my Tic Tac Toe game"
+    determine_order
+  end
+  
+  def determine_order
+    puts "Would you like to go first? Please enter Y or N \n"
+    answer = gets.upcase.chomp
+      if answer == "Y"
+        human_turn
+      elsif answer == "N"
+        puts "A foolish choice - Muahaha! \n"
+        eval_board
+        human_turn
+      else
+        puts "I don't understand that. \n"
+        determine_order
+      end
+  end
+
+  def human_turn
+    default_board
+    puts "Please select your spot."
     until game_is_over(@board) || tie(@board)
       get_human_spot
       if !game_is_over(@board) && !tie(@board)
         eval_board
       end
-      puts "|_#{@board[0]}_|_#{@board[1]}_|_#{@board[2]}_|\n|_#{@board[3]}_|_#{@board[4]}_|_#{@board[5]}_|\n|_#{@board[6]}_|_#{@board[7]}_|_#{@board[8]}_|\n"
+      default_board
     end
-    puts "Game over"
+    who_won
   end
 
-  def determine_order
-    puts "Would you like to go first? Please enter Y or N \n"
-    answer = gets.upcase.chomp
-      if answer == "Y"
-        human_first
-      elsif answer == "N"
-        puts "Your loss! Muahaha! \n"
-        play_game
-      else
-        puts "I don't understand that. \n"
-        determine_order #make so it breaks eventually?
-      end
+  def who_won
+    puts "Game Over!"
+    if tie(@board)
+      puts "We have tied! I'll get you next time." 
+    end
   end
 
-  def get_human_spot #why are you not displayingggggg
+  def get_human_spot
     spot = nil
     until spot
       spot = gets.chomp.to_i
-      if @board[spot] != "#{@human}" && @board[spot] != "O"
-        @board[spot] = "#{@human}"
+      if @board[spot] != @human && @board[spot] != @computer
+        @board[spot] = @human
       else
-        spot = nil
+        puts "That's not a valid answer. I'll give you one more chance."
+        default_board
+        get_human_spot
       end
     end
   end
 
-  def eval_board #announce if is a tie or not
+  def eval_board
     spot = nil
     until spot
       if @board[4] == "4"
@@ -74,12 +86,13 @@ class Game
         @board[spot] = @computer
       else
         spot = get_best_move(@board, @computer)
-        if @board[spot] != "#{@human}" && @board[spot] != "O"
+        if @board[spot] != "#{@human}" && @board[spot] != @computer
           @board[spot] = @computer
         else
           spot = nil
         end
       end
+      puts "I have chosen spot #{spot}!"
     end
   end
 
@@ -87,7 +100,7 @@ class Game
     available_spaces = []
     best_move = nil
     board.each do |s|
-      if s != "#{@human}" && s != "O"
+      if s != @human && s != @computer
         available_spaces << s
       end
     end
@@ -116,8 +129,7 @@ class Game
     end
   end
 
-  def game_is_over(b) #i don't think it even displays a message? should offer to play again.
-
+  def game_is_over(b)
     [b[0], b[1], b[2]].uniq.length == 1 ||
     [b[3], b[4], b[5]].uniq.length == 1 ||
     [b[6], b[7], b[8]].uniq.length == 1 ||
@@ -129,7 +141,7 @@ class Game
   end
 
   def tie(b)
-    b.all? { |s| s == "#{@human}" || s == "O" }
+    b.all? { |s| s == @human || s == @computer }
   end
 end
 
