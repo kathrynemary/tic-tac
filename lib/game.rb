@@ -90,7 +90,7 @@ class Game
     end
   end
 
-  def get_best_move(board, next_player, depth = 0, best_score = {}) #best_score, depth, next_player no other matches
+  def get_best_move(board, next_player, depth = 0, best_score = {})
     available_spaces = []
     best_move = nil
     board.each do |s|
