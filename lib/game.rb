@@ -1,10 +1,3 @@
-=begin
-get_best_move is huge
-say who won
-offer to play again?
-wont work if tie/computer wins???????******************8
-=end
-
 class Game
   def initialize
     @board = ["0", "1", "2", "3", "4", "5", "6", "7", "8"]
@@ -93,7 +86,7 @@ class Game
           spot = nil
         end
       end
-      puts "I have chosen spot #{spot}! \n"
+      puts "I have chosen spot #{spot}!"
     end
   end
 
