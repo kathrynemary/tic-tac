@@ -2,6 +2,7 @@
 get_best_move is huge
 say who won
 offer to play again?
+wont work if tie/computer wins???????******************8
 =end
 
 class Game
@@ -86,17 +87,17 @@ class Game
         @board[spot] = @computer
       else
         spot = get_best_move(@board, @computer)
-        if @board[spot] != "#{@human}" && @board[spot] != @computer
+        if @board[spot] != @human && @board[spot] != @computer
           @board[spot] = @computer
         else
           spot = nil
         end
       end
-      puts "I have chosen spot #{spot}!"
+      puts "I have chosen spot #{spot}! \n"
     end
   end
 
-  def get_best_move(board, next_player, depth = 0, best_score = {})
+  def get_best_move(board, next_player, depth = 0, best_score = {}) #best_score, depth, next_player no other matches
     available_spaces = []
     best_move = nil
     board.each do |s|
