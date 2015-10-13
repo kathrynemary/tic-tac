@@ -56,7 +56,9 @@ class Game
   def play_loop
     until game_is_over
       eval_board
-      get_human_spot
+      if !game_is_over
+        get_human_spot
+      end
     end
     who_won
   end
@@ -67,7 +69,7 @@ class Game
       @board[spot] = @computer
     else
       spot = get_best_move.to_i
-      if @board[spot] != @computer && @board [spot] != @human
+      if @board[spot] != @computer && @board[spot] != @human
         @board[spot] = @computer
       end
     end
@@ -96,29 +98,29 @@ class Game
         return @best_move
       else
         random_space
-        return @best_move.sample
+        return @best_move
       end
     end
-    @available_spaces.clear
+    @best_move = @best_move.to_i
   end
 
   def almost_winning (player)
     find_available_spaces
-    @available_spaces.each do |space|
-      @board[space.to_i] = player
+    @available_spaces.each do |as|
+      @board[as.to_i] = player
       if we_have_a_winner(@board)
-        @best_move = space.to_i
-        @board[space.to_i] = space
+        @best_move = as.to_i
+        @board[as.to_i] = as
         return @best_move
       else
-        @board[space.to_i] = space
+        @board[as.to_i] = as
         @best_move = nil
       end
     end
   end
   
   def find_available_spaces
-    @available_spaces = Array.new
+    @available_spaces = []
     @board.each do |x|
       if x != @human && x != @computer
         @available_spaces << x
@@ -128,9 +130,7 @@ class Game
   end
 
   def random_space
-    find_available_spaces
-    @best_move = @available_spaces
-    return @best_move
+    @best_move = @available_spaces.sample
   end
 
   def game_is_over
